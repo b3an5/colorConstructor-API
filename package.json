@@ -11,10 +11,24 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "jest": "^24.5.0",
     "express": "^4.17.1",
+    "jest": "^24.8.0",
     "knex": "^0.18.1",
     "pg": "^7.11.0",
     "supertest": "^4.0.0"
-  }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-jest": "^24.5.0",
+    "nodemon": "^1.19.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/b3an5/colorConstructor-API.git"
+  },
+  "bugs": {
+    "url": "https://github.com/b3an5/colorConstructor-API/issues"
+  },
+  "homepage": "https://github.com/b3an5/colorConstructor-API#readme"
 }
