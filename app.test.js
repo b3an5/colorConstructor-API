@@ -8,8 +8,6 @@ const app = require("./app");
 describe("Server", () => {
   beforeEach(async () => {
     await database.seed.run();
-    const projects = await database("projects").select();
-    projects.forEach(project => project.created_at.toJSON());
   });
 
   describe("init", () => {
@@ -76,4 +74,6 @@ describe("Server", () => {
       expect(palette).toEqual(expectedPalette);
     });
   });
+
+  describe("post methods", () => {});
 });
