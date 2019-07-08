@@ -30,15 +30,15 @@ module.exports = {
   },
 
   test: {
-    client: 'pg',
-    connection: 'postgres://localhost/colorconstructor_test',
+    client: "pg",
+    connection: "postgres://localhost/colorconstructor",
     migrations: {
-      directory: './db/migrations'
+      directory: "./db/migrations"
     },
     seeds: {
-      directory: './db/seeds/test'
+      directory: "./db/seeds/test"
     },
-    useNullAsDefault: true,
+    useNullAsDefault: true
   },
 
   production: {
