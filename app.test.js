@@ -114,4 +114,48 @@ describe("Server", () => {
       expect(newPallete.name).toEqual(palette.name);
     });
   });
+  describe("Patch methods", () => {
+    it("should be able to patch a project", async () => {
+      const expectedProject = await database("projects").first();
+      const id = expectedProject.id;
+      let newNameProject = expectedProject;
+      newNameProject.name = "Theo";
+
+      const response = await request(app)
+        .patch(`/api/v1/projects/${id}`)
+        .send(newNameProject);
+
+      expect(newNameProject.name).toEqual(response.body.name);
+    });
+
+    it("should be able to patch a palette", async () => {
+      const expectedPalette = await database("palettes").first();
+      const id = expectedPalette.id;
+      let newNamePalette = expectedPalette;
+      newNamePalette.name = "Theo";
+
+      const response = await request(app)
+        .patch(`/api/v1/palettes/${id}`)
+        .send(newNamePalette);
+
+      expect(newNamePalette.name).toEqual(response.body.name);
+    });
+  });
+
+  describe("delete methods", () => {
+    it("should delete a palette", async () => {
+      const palette = await database("palettes").first();
+      const id = palette.id;
+
+      const deleted = await request(app).delete(`/api/v1/palettes/${id}`);
+
+      deleted;
+
+      const deletedPalette = await database("palettes")
+        .where("id", id)
+        .first();
+
+      expect(deletedPalette).toEqual(undefined);
+    });
+  });
 });

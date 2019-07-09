@@ -106,26 +106,28 @@ app.post("/api/v1/palettes", (req, res) => {
 app.patch("/api/v1/projects/:id", (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
+  const newProject = req.body;
 
   if (!name) return res.status(422).json("Please provide a name.");
 
   database("projects")
     .where({ id })
     .update({ name })
-    .then(res.status(200).json("Name successfully updated"))
+    .then(res.status(200).json(newProject))
     .catch(error => res.status(500).json({ error }));
 });
 
 app.patch("/api/v1/palettes/:id", (req, res) => {
   const { id } = req.params;
   const { name, color_1, color_2, color_3, color_4, color_5 } = req.body;
+  const newPalette = req.body;
 
   if (!name) return res.status(422).json("Please provide a name.");
 
   database("palettes")
     .where({ id })
     .update({ name, color_1, color_2, color_3, color_4, color_5 })
-    .then(res.status(200).json("Palette successfully updated"))
+    .then(res.status(200).json(newPalette))
     .catch(error => res.status(500).json({ error }));
 });
 
