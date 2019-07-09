@@ -76,6 +76,42 @@ describe("Server", () => {
   });
 
   describe("post methods", () => {
-    // it("should be able to post projects", () => {b});
+    it("should be able to post projects", async () => {
+      const newProject = { name: "johnathan" };
+
+      const response = await request(app)
+        .post("/api/v1/projects")
+        .send(newProject);
+      const id = response.body.id;
+      const project = await database("projects")
+        .where("id", id)
+        .first();
+
+      //expectation
+      expect(newProject.name).toEqual(project.name);
+    });
+    it("should be able to post palettes", async () => {
+      const project = await database("projects").first();
+
+      const newPallete = {
+        name: "john",
+        color_1: "fffff",
+        color_2: "fffff",
+        color_3: "fffff",
+        color_4: "fffff",
+        color_5: "fffff",
+        project_id: project.id
+      };
+
+      const response = await request(app)
+        .post("/api/v1/palettes")
+        .send(newPallete);
+      const id = response.body.id;
+      const palette = await database("palettes")
+        .where("id", id)
+        .first();
+
+      expect(newPallete.name).toEqual(palette.name);
+    });
   });
 });
