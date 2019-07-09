@@ -5,3 +5,5 @@ services:
   - postgresql
 before_script:
   - psql -c 'CREATE DATABASE colorconstructor_test;' -U postgres
+  - npm run migrate-test
+  - npm run seed-test
