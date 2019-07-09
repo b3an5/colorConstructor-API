@@ -48,12 +48,9 @@ module.exports = {
       directory: "./db/migrations"
     },
     useNullAsDefault: true,
-    pool: {
-      min: 2,
-      max: 10
+    seeds: {
+      directory: "./db/seeds/production"
     },
-    migrations: {
-      tableName: "knex_migrations"
-    }
+    useNullAsDefault: true
   }
 };
