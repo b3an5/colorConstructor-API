@@ -1,7 +1,14 @@
 language: node_js
 node_js:
-  - "node"
+- node
 services:
-  - postgresql
+- postgresql
 before_script:
-  - psql -c 'CREATE DATABASE colorconstructor;' -U postgres
+- psql -c 'CREATE DATABASE colorconstructor_test;' -U postgres
+- npm run migrate
+- npm run seed
+deploy:
+  app: colorconstructor-api
+  provider: heroku
+  api_key:
+    secure: ie9rFpwn82fHOo2yuyt/UKHhzt4kA6+a36keuCDphoP2ExqvSWpctGGYuRkBuDafOYQhraAaTk9NT2d9+TgHItKSX001UrqSLK+nvjzxXXdQQVJ0qGl+O1kQ5rIXmg0NJuz71f2pJShYREOiSgK0Zshrp1QKwy9rRKj5EwLpgLBx9x3cdinfy7cwheB3ejXvywn9BSM/3OBBk252YiNU3Argj6DtM247POP3uVFKQ+NkhYfRQBE/1Cu46/gcUVM9UquBPu4td57LtmF9tdRy/RMHKYjn/5VCceRXzh91GeZcpMjgxlqIpAQLROyS0jT+OIAJY0s0excUYeVn8nOYPFLt2bsnrdDrtzt/I8crJDCNDzrP15KIjyIyYDh2pNS/Ax+YuXTnOq5+8Tc5NxGKT8/2iMiMIgKyQtRk8s7K1JJaJGzN+L2oArwEBB2PsBjOUBDPXrgjtIqYrSgp3UPZ9pPitY6rrgvC0z+pIjew6/YEvexW+lojXcX9mAEAAgSN7dNnDosmUpf3BeKhYp/IgJ1+NMajHSW33aq2dKbUdETdGHclpCV/Z/tmq1emcgt5JSUoektTXZZmrcAeWV4eFqMl0ocV1U3FVUnZ6/zeNL8xLsnL5O8OWQajXE/FibGVQlZ91NXEFgzvdUmyxVqAtSXnC/kaxIG6gBNvX6sbvPk=
