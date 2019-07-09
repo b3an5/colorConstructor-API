@@ -4,4 +4,4 @@ node_js:
 services:
   - postgresql
 before_script:
-  - psql -c 'CREATE DATABASE colorconstructor;' -U postgres
+  - psql -c 'CREATE DATABASE colorconstructor_test;' -U postgres

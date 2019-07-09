@@ -31,7 +31,7 @@ module.exports = {
 
   test: {
     client: "pg",
-    connection: "postgres://localhost/colorconstructor",
+    connection: "postgres://localhost/colorconstructor_test",
     migrations: {
       directory: "./db/migrations"
     },
