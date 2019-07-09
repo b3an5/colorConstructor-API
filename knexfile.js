@@ -49,7 +49,7 @@ module.exports = {
     },
     useNullAsDefault: true,
     seeds: {
-      directory: "./db/seeds/production"
+      directory: "./db/seeds/dev"
     },
     useNullAsDefault: true
   }
