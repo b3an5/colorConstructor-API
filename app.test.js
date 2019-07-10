@@ -60,6 +60,30 @@ describe("Server", () => {
       expect(project).toEqual(expectedProject);
     });
 
+    it("should return a status of 404 if project id doesnt exist", async () => {
+      const res = await request(app).get(`/api/v1/projects/50`);
+
+      expect(res.status).toBe(404);
+    });
+
+    it("should return a status of 500 if project id is NaN", async () => {
+      const res = await request(app).get(`/api/v1/projects/nwfejnn`);
+
+      expect(res.status).toBe(500);
+    });
+
+    it("should return a status of 404 if palette id doesnt exist", async () => {
+      const res = await request(app).get(`/api/v1/palettes/10000`);
+
+      expect(res.status).toBe(404);
+    });
+
+    it("should return a status of 500 if palette id is NaN", async () => {
+      const res = await request(app).get(`/api/v1/palettes/nwovn`);
+
+      expect(res.status).toBe(500);
+    });
+
     it("should get the specific palette", async () => {
       const expectedPalette = await database("palettes")
         .select()
@@ -90,6 +114,18 @@ describe("Server", () => {
       //expectation
       expect(newProject.name).toEqual(project.name);
     });
+
+    it("should not be able to post projects if no name is given", async () => {
+      const newProject = { nam: "johnathan" };
+
+      const response = await request(app)
+        .post("/api/v1/projects")
+        .send(newProject);
+
+      //expectation
+      expect(response.status).toBe(422);
+    });
+
     it("should be able to post palettes", async () => {
       const project = await database("projects").first();
 
@@ -113,7 +149,61 @@ describe("Server", () => {
 
       expect(newPallete.name).toEqual(palette.name);
     });
+
+    it("should not be able to post palettes if color isnt passed in", async () => {
+      const project = await database("projects").first();
+
+      const newPallete = {
+        name: "john",
+        color_2: "fffff",
+        color_3: "fffff",
+        color_4: "fffff",
+        color_5: "fffff",
+        project_id: project.id
+      };
+
+      const response = await request(app)
+        .post("/api/v1/palettes")
+        .send(newPallete);
+
+      expect(response.status).toBe(422);
+    });
+    it("should not be able to post palettes if name isnt passed in", async () => {
+      const project = await database("projects").first();
+
+      const newPallete = {
+        color_2: "fffff",
+        color_3: "fffff",
+        color_4: "fffff",
+        color_5: "fffff",
+        project_id: project.id
+      };
+
+      const response = await request(app)
+        .post("/api/v1/palettes")
+        .send(newPallete);
+
+      expect(response.status).toBe(422);
+    });
+    it("should not be able to post palettes if project_id isnt passed in", async () => {
+      const project = await database("projects").first();
+
+      const newPallete = {
+        name: "john",
+        color_2: "fffff",
+        color_3: "fffff",
+        color_4: "fffff",
+        color_5: "fffff"
+      };
+
+      const response = await request(app)
+        .post("/api/v1/palettes")
+        .send(newPallete);
+
+      expect(response.status).toBe(422);
+    });
   });
+
   describe("Patch methods", () => {
     it("should be able to patch a project", async () => {
       const expectedProject = await database("projects").first();
@@ -128,6 +218,19 @@ describe("Server", () => {
       expect(newNameProject.name).toEqual(response.body.name);
     });
 
+    it("shouldnt be able to patch a project if no new name is provided", async () => {
+      const expectedProject = await database("projects").first();
+      const id = expectedProject.id;
+      let newNameProject = expectedProject;
+      newNameProject.name = null;
+
+      const response = await request(app)
+        .patch(`/api/v1/projects/${id}`)
+        .send(newNameProject);
+
+      expect(response.status).toBe(422);
+    });
+
     it("should be able to patch a palette", async () => {
       const expectedPalette = await database("palettes").first();
       const id = expectedPalette.id;
@@ -139,6 +242,19 @@ describe("Server", () => {
         .send(newNamePalette);
 
       expect(newNamePalette.name).toEqual(response.body.name);
+    });
+
+    it("shouldnt be able to patch a palette if there isnt a name", async () => {
+      const expectedPalette = await database("palettes").first();
+      const id = expectedPalette.id;
+      let newNamePalette = expectedPalette;
+      newNamePalette.name = null;
+
+      const response = await request(app)
+        .patch(`/api/v1/palettes/${id}`)
+        .send(newNamePalette);
+
+      expect(response.status).toEqual(422);
     });
   });
 
@@ -156,6 +272,24 @@ describe("Server", () => {
         .first();
 
       expect(deletedPalette).toEqual(undefined);
+    });
+    it("should delete a project", async () => {
+      const newProject = { name: "johnathan" };
+
+      const response = await request(app)
+        .post("/api/v1/projects")
+        .send(newProject);
+      const id = response.body.id;
+
+      const deleted = await request(app).delete(`/api/v1/projects/${id}`);
+
+      deleted;
+
+      const deletedProject = await database("projects")
+        .where("id", id)
+        .first();
+
+      expect(deletedProject).toEqual(undefined);
     });
   });
 });

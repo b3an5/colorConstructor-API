@@ -11,58 +11,59 @@ app.get("/", (req, res) => {
   res.status(200).send("hello world");
 });
 
-app.get("/api/v1/projects", (req, res) => {
-  database("projects")
-    .select()
-    .then(projects => {
-      res.status(200).json(projects);
-    })
-    .catch(error => res.status(500).json({ error }));
+app.get("/api/v1/projects", async (req, res) => {
+  const projects = await database("projects").select();
+  try {
+    res.status(200).json(projects);
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 });
 
-app.get("/api/v1/palettes", (req, res) => {
-  database("palettes")
-    .select()
-    .then(palettes => {
-      res.status(200).json(palettes);
-    })
-    .catch(error => res.status(500).json({ error }));
+app.get("/api/v1/palettes", async (req, res) => {
+  const palettes = await database("palettes").select();
+  try {
+    res.status(200).json(palettes);
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 });
 
-app.get("/api/v1/projects/:id", (req, res) => {
-  database("projects")
-    .where("id", req.params.id)
-    .select()
-    .then(project => {
-      if (project.length) {
-        res.status(200).json(project);
-      } else {
-        res.statusCode(404).json({
-          error: `cound not find project with id: ${req.params.id}`
-        });
-      }
-    })
-    .catch(error => res.status(500).json({ error }));
+app.get("/api/v1/projects/:id", async (req, res) => {
+  try {
+    const project = await database("projects")
+      .where("id", req.params.id)
+      .select();
+    if (!project.length) {
+      return res.status(404).json({
+        error: `cound not find project with id: ${req.params.id}`
+      });
+    } else {
+      res.status(200).json(project);
+    }
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 });
 
-app.get("/api/v1/palettes/:id", (req, res) => {
-  database("palettes")
-    .where("id", req.params.id)
-    .select()
-    .then(palette => {
-      if (palette.length) {
-        res.status(200).json(palette);
-      } else {
-        res.statusCode(404).json({
-          error: `cound not find palette with id: ${req.params.id}`
-        });
-      }
-    })
-    .catch(error => res.status(500).json({ error }));
+app.get("/api/v1/palettes/:id", async (req, res) => {
+  try {
+    const palette = await database("palettes")
+      .where("id", req.params.id)
+      .select();
+    if (!palette.length) {
+      return res.status(404).json({
+        error: `cound not find palette with id: ${req.params.id}`
+      });
+    } else {
+      return res.status(200).json(palette);
+    }
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 });
 
 app.post("/api/v1/projects", (req, res) => {
-  console.log(req.body);
   const { name } = req.body;
   const project = req.body;
 
@@ -72,7 +73,7 @@ app.post("/api/v1/projects", (req, res) => {
     database("projects")
       .insert(project, "id")
       .then(project => {
-        res.status(201).json({ ...req.body, id: project[0] });
+        res.status(201).json({ name, id: project[0] });
       })
       .catch(error => {
         res.status(500).json({ error });
@@ -92,7 +93,15 @@ app.post("/api/v1/palettes", (req, res) => {
   } = req.body;
   const palette = req.body;
 
-  if ((!name, !color_1, !color_2, !color_3, !color_4, !color_5, !project_id)) {
+  if (
+    !name ||
+    !color_1 ||
+    !color_2 ||
+    !color_3 ||
+    !color_4 ||
+    !color_5 ||
+    !project_id
+  ) {
     return res.status(422).json();
   } else {
     database("palettes")
