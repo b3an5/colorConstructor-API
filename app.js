@@ -1,9 +1,11 @@
 const express = require("express");
+const cors = require("cors");
 const environment = process.env.NODE_ENV || "development";
 const configuration = require("./knexfile")[environment];
 const database = require("knex")(configuration);
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.status(200).send("hello world");
@@ -60,6 +62,7 @@ app.get("/api/v1/palettes/:id", (req, res) => {
 });
 
 app.post("/api/v1/projects", (req, res) => {
+  console.log(req.body);
   const { name } = req.body;
   const project = req.body;
 
@@ -69,7 +72,7 @@ app.post("/api/v1/projects", (req, res) => {
     database("projects")
       .insert(project, "id")
       .then(project => {
-        res.status(201).json({ id: project[0] });
+        res.status(201).json({ ...req.body, id: project[0] });
       })
       .catch(error => {
         res.status(500).json({ error });
@@ -95,7 +98,7 @@ app.post("/api/v1/palettes", (req, res) => {
     database("palettes")
       .insert(palette, "id")
       .then(palette => {
-        res.status(201).json({ id: palette[0] });
+        res.status(201).json({ ...req.body, id: palette[0] });
       })
       .catch(error => {
         res.status(500).json({ error });
